@@ -10,7 +10,7 @@ class alunos implements JsonSerializable
         private ?int $id = null,
         private string $nome = "",
         private ?int $idade = null,
-        private Cursos $curso = new cursos()
+        private cursos $curso = new cursos()
     ){}
 
     public function jsonSerialize(): array
@@ -19,7 +19,8 @@ class alunos implements JsonSerializable
             'id'=>$this->getId(),
             'nome'=>$this->getNome(),
             'idade'=>$this->getIdade(),
-            'curso_id'=>$this->curso->getID()
+            'curso_id'=>$this->curso->getID(),
+            'curso_nome'=>$this->curso->getNome()
         ];
     }
 
@@ -40,7 +41,7 @@ class alunos implements JsonSerializable
         return $this->nome;
     }
 
-    public function setName(string $nome): self
+    public function setNome(string $nome): self
     {
         $this->nome = $nome;
         return $this;
@@ -59,12 +60,12 @@ class alunos implements JsonSerializable
     }
 
     // GETs e SETs para $curso
-    public function getCurso(): Cursos
+    public function getCurso(): cursos
     {
         return $this->curso;
     }
 
-    public function setCurso(Cursos $curso): self
+    public function setCurso(cursos $curso): self
     {
         $this->curso = $curso;
         return $this;
