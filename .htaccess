@@ -1,0 +1,12 @@
+RewriteEngine on
+
+# F = Forbidden (403), L = Last (interrompe outras regras)
+RewriteRule ^api/ - [F,L]
+
+# F = Forbidden (403), L = Last (interrompe outras regras)
+RewriteRule ^system/ - [F,L]
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ desafio_estagio_contaself/backend/src/api.php
