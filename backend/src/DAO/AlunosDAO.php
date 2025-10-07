@@ -90,6 +90,8 @@ Class AlunosDAO
 
         $aluno = new alunos();
 
+        $statement->execute();
+
         $line = $statement->fetch(PDO::FETCH_OBJ);
 
         if(!$line) {

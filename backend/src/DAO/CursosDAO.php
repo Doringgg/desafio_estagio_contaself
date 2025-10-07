@@ -43,4 +43,27 @@ class CursosDAO
         return $results;
     }
 
+    public function haveCurso($curso_id): bool
+    {
+        $query = 'SELECT * FROM cursos WHERE id = :curso_id ;';
+
+        $statement = Database::getConnection()->prepare($query);
+
+        $statement->bindValue(
+            ':curso_id',
+            $curso_id,
+            PDO::PARAM_INT
+        );
+
+        $statement->execute();
+        $line = $statement->fetch(PDO::FETCH_OBJ);
+
+        if(!$line){
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
 }
