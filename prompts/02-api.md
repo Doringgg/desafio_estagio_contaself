@@ -17,3 +17,13 @@ Prompt 2{
 
     Validação: Comparei com um projeto antigo e analisei a lógica/sintaxe.
 }
+
+Prompt 3{
+    Prompt: Qual a regex para aceitar letras, números, espaços, etc. Será utilizada em endpoint para receber nome de cursos.
+
+    Resposta da IA: (Regex que aceita os elementos necessários para meu endpoint).
+
+    Adaptações: Nenhuma, a IA me gerou a regex ideal para a ocasião;
+
+    Validação: Testei em mini programas separados para ver se elas realmente estavam corretas.
+}
