@@ -1,8 +1,8 @@
 <?php
 
-require_once "backend/src/models/alunos.php";
-require_once "backend/src/DAO/AlunosDAO.php";
-require_once "backend/src/utils/HttpResponse.php";
+require_once (__DIR__ . '/../models/alunos.php');
+require_once (__DIR__ . '/../DAO/AlunosDAO.php');
+require_once (__DIR__ . '/../utils/HttpResponse.php');
 
 class AlunosControl
 {
@@ -10,9 +10,9 @@ class AlunosControl
     {
         $alunos = new alunos();
 
-        $alunos->setNome($stdAluno->aluno->nome);
-        $alunos->setIdade($stdAluno->aluno->idade);
-        $alunos->getCurso()->setId($stdAluno->aluno->curso_id);
+        $alunos->setNome($stdAluno->alunos->nome);
+        $alunos->setIdade($stdAluno->alunos->idade);
+        $alunos->getCurso()->setId($stdAluno->alunos->curso_id);
 
         $alunosDAO = new AlunosDAO();
 

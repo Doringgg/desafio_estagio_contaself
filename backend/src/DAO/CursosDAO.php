@@ -1,7 +1,7 @@
 <?php
 
-require_once "backend/src/models/cursos.php";
-require_once "backend/src/database/database.php"; 
+require_once (__DIR__ . '/../models/cursos.php');
+require_once (__DIR__ . '/../database/database.php'); 
 
 class CursosDAO
 {

@@ -1,8 +1,8 @@
 <?php
 
-require_once "backend/src/models/cursos.php";
-require_once "backend/src/DAO/CursosDAO.php";
-require_once "backend/src/utils/HttpResponse.php";
+require_once (__DIR__ . '/../models/cursos.php');
+require_once (__DIR__ . '/../DAO/CursosDAO.php');
+require_once (__DIR__ . '/../utils/HttpResponse.php');
 
 class CursosControl
 {
@@ -10,7 +10,7 @@ class CursosControl
     {
         $cursos = new cursos();
 
-        $cursos->setNome($stdCurso->curso->nome);
+        $cursos->setNome($stdCurso->cursos->nome);
 
         $cursosDAO = new CursosDAO();
 

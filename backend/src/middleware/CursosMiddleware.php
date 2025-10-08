@@ -1,6 +1,6 @@
 <?php 
 
-require_once "backend/src/utils/HttpResponse.php";
+require_once (__DIR__ . '/../utils/HttpResponse.php');
 
 class CursosMiddleware
 {
@@ -80,6 +80,19 @@ class CursosMiddleware
                 error: [
                     'ErrorCode' => 'validation_error',
                     'message' => 'Nome do curso contém caracteres inválidos'
+                ],
+                httpCode: 400
+            ))->send();
+            exit();
+        }
+
+        if(preg_match(pattern: '/^[\-\'\.]|[\-\'\.]$/', subject: $nomeCurso)){
+            (new Response(
+                success: false,
+                message: 'Informações Inválidas',
+                error: [
+                    'ErrorCode' => 'validation_error',
+                    'message' => 'Nome do curso não pode começar ou terminar com caracteres especiais'
                 ],
                 httpCode: 400
             ))->send();

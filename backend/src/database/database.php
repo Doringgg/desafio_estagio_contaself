@@ -21,7 +21,7 @@ class Database{
     private static function connect(): PDO
     {
         $dsn = sprintf(
-            'mysql:host=mysql:host=%s;port=%d;dbname=%s;charset=%s',
+            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
             Database::HOST,
             Database::PORT,
             Database::DATABASE,

@@ -1,7 +1,7 @@
 <?php 
 
-require_once "backend/src/utils/HttpResponse.php";
-require_once "backend/src/DAO/CursosDAO.php";
+require_once (__DIR__ . '/../utils/HttpResponse.php');
+require_once (__DIR__ . '/../DAO/CursosDAO.php');
 
 class AlunosMiddleware
 {

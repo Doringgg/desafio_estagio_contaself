@@ -1,4 +1,4 @@
 <?php
-require_once "backend/src/routes/Roteador.php";
+require_once(__DIR__ . '/../routes/Roteador.php');
 
 (new Roteador())->start();

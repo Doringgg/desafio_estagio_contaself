@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once "backend/src/models/cursos.php";
+require_once "cursos.php";
 
 class alunos implements JsonSerializable
 {
