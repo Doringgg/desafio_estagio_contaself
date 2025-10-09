@@ -12,7 +12,7 @@ Insomnia ou Postman
 
 📥 1. Clonar o Projeto
 
-# Abra o terminal/prompt no diretório do XAMPP (C:\xampp\htdocs\)
+Abra o terminal/prompt no diretório do XAMPP (C:\xampp\htdocs\)
 git clone https://github.com/Doringgg/desafio_estagio_contaself.git
 🗄️ 2. Configurar Banco de Dados
 2.1 Iniciar Serviços
@@ -28,10 +28,12 @@ backend/src/docs/database.sql
 ⚙️ 3. Configurar Ambiente PHP
 3.1 Instalar Dependências
 
-# No terminal, na pasta do projeto
+No terminal, na pasta do projeto
 cd desafio_estagio_contaself
 composer install
 composer require --dev phpunit/phpunit
+
+
 3.2 Configurar Conexão com Banco (Se Necessário)
 Caso precise alterar a senha ou porta do MySQL, edite o arquivo:
 backend/src/database/Database.php
@@ -60,15 +62,10 @@ Crie um arquivo .htaccess na raiz do htdocs (C:\xampp\htdocs\.htaccess) com:
 
 RewriteEngine on
 
-# ❌ Bloqueia acesso direto à pasta "api"
-# F = Forbidden (403), L = Last (interrompe outras regras)
 RewriteRule ^api/ - [F,L]
 
-# ❌ Bloqueia acesso direto à pasta "system"
-# F = Forbidden (403), L = Last (interrompe outras regras)
 RewriteRule ^system/ - [F,L]
 
-# ✅ Redireciona requisições que não são arquivos nem diretórios para app.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ desafio_estagio_contaself/backend/src/utils/api.php
