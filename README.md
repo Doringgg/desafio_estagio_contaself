@@ -38,7 +38,6 @@ composer require --dev phpunit/phpunit
 Caso precise alterar a senha ou porta do MySQL, edite o arquivo:
 backend/src/database/Database.php
 
-php
 private const HOST = 'localhost';      // ou '127.0.0.1'
 private const USER = 'root';           // usuário padrão
 private const PASSWORD = '';           // ⚠️ EDITE APENAS SE PRECISAR DE SENHA
@@ -47,15 +46,7 @@ private const PORT = 3306;             // ⚠️ EDITE SE SUA PORTA MYSQL FOR DI
 
 🌐 4. Configurar Servidor Web
 4.1 Estrutura de Pastas
-Certifique-se que a pasta desafio_estagio_contaself esteja dentro de C:\xampp\htdocs\:
-
-text
-C:\xampp\htdocs\
-├── desafio_estagio_contaself\
-│   ├── backend/
-│   ├── prompts/
-│   └── README.MD
-└── .htaccess
+Certifique-se que a pasta desafio_estagio_contaself com todo o projeto esteja dentro de C:\xampp\htdocs\
 
 4.2 Configurar .htaccess
 Crie um arquivo .htaccess na raiz do htdocs (C:\xampp\htdocs\.htaccess) com:
@@ -72,6 +63,7 @@ RewriteRule ^(.*)$ desafio_estagio_contaself/backend/src/utils/api.php
 
 🚀 5. Testar a Aplicação
 Base URL: http://localhost/
+
 📝 Endpoints Disponíveis:
 
 Cursos:
