@@ -272,9 +272,7 @@ class Router
      * @return bool
      */
     public function run($callback = null)
-    
     {
-        
         // Define which method we need to handle
         $this->requestedMethod = $this->getRequestMethod();
 
@@ -406,34 +404,53 @@ class Router
      * @return int The number of routes handled
      */
     private function handle($routes, $quitAfterRun = false)
-{
-    $numHandled = 0;
-    $uri = $this->getCurrentUri();
+    {
+        // Counter to keep track of the number of routes we've handled
+        $numHandled = 0;
 
-    
-    foreach ($routes as $route) {
+        // The current page URL
+        $uri = $this->getCurrentUri();
 
-        
-        $is_match = $this->patternMatches($route['pattern'], $uri, $matches, PREG_OFFSET_CAPTURE);
+        // Loop all routes
+        foreach ($routes as $route) {
 
+            // get routing matches
+            $is_match = $this->patternMatches($route['pattern'], $uri, $matches, PREG_OFFSET_CAPTURE);
 
+            // is there a valid match?
+            if ($is_match) {
 
-        if ($is_match) {
-            // ... resto do código original
-            $matches = array_slice($matches, 1);
-            $params = array_map(function ($match, $index) use ($matches) {
-                // ... código original
-            }, $matches, array_keys($matches));
+                // Rework matches to only contain the matches, not the orig string
+                $matches = array_slice($matches, 1);
 
-            $this->invoke($route['fn'], $params);
-            $numHandled++;
-            
-            if ($quitAfterRun) break;
+                // Extract the matched URL parameters (and only the parameters)
+                $params = array_map(function ($match, $index) use ($matches) {
+
+                    // We have a following parameter: take the substring from the current param position until the next one's position (thank you PREG_OFFSET_CAPTURE)
+                    if (isset($matches[$index + 1]) && isset($matches[$index + 1][0]) && is_array($matches[$index + 1][0])) {
+                        if ($matches[$index + 1][0][1] > -1) {
+                            return trim(substr($match[0][0], 0, $matches[$index + 1][0][1] - $match[0][1]), '/');
+                        }
+                    } // We have no following parameters: return the whole lot
+
+                    return isset($match[0][0]) && $match[0][1] != -1 ? trim($match[0][0], '/') : null;
+                }, $matches, array_keys($matches));
+
+                // Call the handling function with the URL parameters if the desired input is callable
+                $this->invoke($route['fn'], $params);
+
+                ++$numHandled;
+
+                // If we need to quit, then quit
+                if ($quitAfterRun) {
+                    break;
+                }
+            }
         }
-    }
 
-    return $numHandled;
-}
+        // Return the number of routes handled
+        return $numHandled;
+    }
 
     private function invoke($fn, $params = array())
     {
@@ -478,13 +495,15 @@ class Router
      */
     public function getCurrentUri()
     {
-        // Versão limpa e funcionando
-        $uri = rawurldecode($_SERVER['REQUEST_URI']);
-        
+        // Get the current Request URI and remove rewrite base path from it (= allows one to run the router in a sub folder)
+        $uri = substr(rawurldecode($_SERVER['REQUEST_URI']), strlen($this->getBasePath()));
+
+        // Don't take query params into account on the URL
         if (strstr($uri, '?')) {
             $uri = substr($uri, 0, strpos($uri, '?'));
         }
 
+        // Remove trailing slash + enforce a slash at the start
         return '/' . trim($uri, '/');
     }
 
@@ -494,18 +513,14 @@ class Router
      * @return string
      */
     public function getBasePath()
-{
-    if ($this->serverBasePath === null) {
-        // Tente diferentes métodos para encontrar o base path correto
-        
-        // Método 1: Usar DOCUMENT_ROOT
-        $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-        $this->serverBasePath = $scriptDir === '/' ? '' : $scriptDir;
-        
-    }
+    {
+        // Check if server base path is defined, if not define it.
+        if ($this->serverBasePath === null) {
+            $this->serverBasePath = implode('/', array_slice(explode('/', $_SERVER['SCRIPT_NAME']), 0, -1)) . '/';
+        }
 
-    return $this->serverBasePath;
-}
+        return $this->serverBasePath;
+    }
 
     /**
      * Explicilty sets the server base path. To be used when your entry script path differs from your entry URLs.

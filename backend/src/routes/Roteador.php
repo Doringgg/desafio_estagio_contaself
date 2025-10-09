@@ -1,5 +1,4 @@
 <?php
-
 require_once (__DIR__ . '/../routes/Router.php');
 require_once(__DIR__ . '/../utils/HttpResponse.php');
 
@@ -19,6 +18,7 @@ class Roteador
         $this->setupHeaders();
         $this->setupAlunosRoutes();
         $this->setupCursosRoutes();
+        $this->setupRelatorioRoute();
         $this->setup404route();
 
     }
@@ -130,7 +130,8 @@ class Roteador
         $this->router->get('/alunos/(\d+)', function ($curso_id): void {
             try{
 
-                echo $curso_id;
+                $alunosControl = new AlunosControl();
+                $alunosControl->readByIDControl($curso_id);
 
             } catch (Throwable $throwable){
 
@@ -142,12 +143,11 @@ class Roteador
             }
         });
 
-        $this->router->get('/alunos/([A-Za-z\-]+)', function ($nomeCurso): never {
+        $this->router->get('/alunos/(.*)', function ($nomeCurso): never {
             try{
-
                 $cursosMiddleware = new CursosMiddleware();
                 $nomeCurso = $cursosMiddleware->isValidNomeCurso($nomeCurso);
-                
+
                 $alunosControl = new AlunosControl();
                 $alunosControl->readByCurso($nomeCurso);
 
@@ -160,6 +160,28 @@ class Roteador
                 );
             }
         });
+
+    }
+
+    private function setupRelatorioRoute(): void
+    {
+
+        $this->router->get('/relatorio', function(): never {
+            try{
+
+                $alunosControl = new AlunosControl();
+                $alunosControl->relatorio();
+
+            } catch (Throwable $throwable){
+
+                $this->sendErrorResponse(
+                    $throwable,
+                    'Erro na seleção de dados'
+
+                );
+            }
+        });
+
     }
 
     private function setup404route(): void{

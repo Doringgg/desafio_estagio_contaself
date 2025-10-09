@@ -89,13 +89,13 @@ class AlunosMiddleware
     {
         $nomeAluno = trim(string: $nomeAluno);
 
-        if(strlen(string: $nomeAluno) < 3){
+        if(strlen(string: $nomeAluno) < 2){
             (new Response(
                 success: false,
                 message: 'Informações Inválidas',
                 error: [
                     'ErrorCode' => 'validation_error',
-                    'message' => 'Nome do aluno não pode ser nulo ou ter menos de 3 letras'
+                    'message' => 'Nome do aluno não pode ser nulo ou ter menos de 2 letras'
                 ],
                 httpCode: 400
             ))->send();
@@ -179,27 +179,26 @@ class AlunosMiddleware
     public function isValidIdadeAluno(int $idadeAluno): self
     {
 
-        if($idadeAluno < 3){
+        if($idadeAluno < 15){
             (new Response(
                 success: false,
                 message: 'Informações Inválidas',
                 error: [
                     'ErrorCode' => 'validation_error',
-                    'message' => 'Idade mínima do aluno é 3 anos'
+                    'message' => 'Idade mínima do aluno é 15 anos'
                 ],
                 httpCode: 400
             ))->send();
             exit();
         }
 
-        // Validação: idade máxima (ex: 120 anos)
-        if($idadeAluno > 120){
+        if($idadeAluno > 99){
             (new Response(
                 success: false,
                 message: 'Informações Inválidas',
                 error: [
                     'ErrorCode' => 'validation_error',
-                    'message' => 'Idade máxima do aluno é 120 anos'
+                    'message' => 'Idade máxima do aluno é 99 anos'
                 ],
                 httpCode: 400
             ))->send();
@@ -215,7 +214,7 @@ class AlunosMiddleware
 
         $CursosDAO = new CursosDAO();
 
-        if ($CursosDAO->haveCurso($curso_id)){
+        if ($CursosDAO->getCursoByID($curso_id,"verify")){
             return $this;
         } else {
             (new Response(
@@ -223,7 +222,7 @@ class AlunosMiddleware
                 message: 'Informações Inválidas',
                 error: [
                     'ErrorCode' => 'validation_error',
-                    'message' => 'O id de curso é inválido'
+                    'message' => 'Não existe um curso com esse Id'
                 ],
                 httpCode: 400
             ))->send();

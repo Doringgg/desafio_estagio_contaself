@@ -1,6 +1,7 @@
 <?php 
 
 require_once (__DIR__ . '/../utils/HttpResponse.php');
+require_once (__DIR__ . '/../DAO/CursosDAO.php');
 
 class CursosMiddleware
 {
@@ -60,13 +61,13 @@ class CursosMiddleware
     {
         $nomeCurso = trim(string: $nomeCurso);
 
-        if(strlen(string: $nomeCurso) < 3){
+        if(strlen(string: $nomeCurso) < 2){
             (new Response(
                 success: false,
                 message: 'Informações Inválidas',
                 error: [
                     'ErrorCode' => 'validation_error',
-                    'message' => 'Nome do curso não pode ser nulo ou ter menos de 3 caracteres'
+                    'message' => 'Nome do curso não pode ser nulo ou ter menos de 2 caracteres'
                 ],
                 httpCode: 400
             ))->send();
@@ -86,7 +87,7 @@ class CursosMiddleware
             exit();
         }
 
-        if(preg_match(pattern: '/^[\-\'\.]|[\-\'\.]$/', subject: $nomeCurso)){
+        if(preg_match(pattern: '/^[\-\'\.\/]|[\-\'\.\/]$/', subject: $nomeCurso)){
             (new Response(
                 success: false,
                 message: 'Informações Inválidas',
@@ -99,7 +100,7 @@ class CursosMiddleware
             exit();
         }
 
-        $nomeCurso = preg_replace(pattern: '/\s+/', replacement: ' ', subject: $nomeCurso);
+        $nomeCurso = str_replace('-',' ',$nomeCurso);
         $nomeCurso = mb_convert_case(string: $nomeCurso, mode: MB_CASE_TITLE, encoding: 'UTF-8');
 
         return $nomeCurso;

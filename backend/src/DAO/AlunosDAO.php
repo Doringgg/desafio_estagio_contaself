@@ -1,6 +1,7 @@
 <?php
 
 require_once (__DIR__ . '/../models/alunos.php');
+require_once (__DIR__ . '/../DAO/cursosDAO.php');
 require_once (__DIR__ . '/../database/database.php');
 
 Class AlunosDAO
@@ -38,6 +39,9 @@ Class AlunosDAO
         $statement->execute();
 
         $alunos->setId(Database::getConnection()->lastInsertId());
+        
+        $cursosDAO = new CursosDAO();
+        $alunos->getCurso()->setNome($cursosDAO->getCursoByID($alunos->getCurso()->getId(),"name"));
 
         return $alunos;
     }
@@ -71,7 +75,7 @@ Class AlunosDAO
         return $results;
     }
 
-    public function readByID(int $idAluno): array
+    public function readByID(int $idCurso): array
     {
         $query = 'SELECT alunos.id, 
                         alunos.nome, 
@@ -79,37 +83,32 @@ Class AlunosDAO
                         cursos.id AS id_curso, 
                         cursos.nome AS nome_curso 
                         FROM alunos LEFT JOIN cursos 
-                        ON alunos.curso_id = cursos.id WHERE alunos.id = :idAluno ;';
+                        ON alunos.curso_id = cursos.id WHERE cursos.id = :idCurso ;';
 
         $statement = Database::getConnection()->prepare($query);
 
         $statement->bindValue(
-            ':idAluno',
-            $idAluno,
+            ':idCurso',
+            $idCurso,
         PDO::PARAM_INT);
-
-        $aluno = new alunos();
 
         $statement->execute();
 
-        $line = $statement->fetch(PDO::FETCH_OBJ);
+        $results = [];
 
-        if(!$line) {
-            return[];
+        while ($line = $statement->fetch(PDO::FETCH_OBJ)) {
+            
+            $alunos = (new alunos())->setId($line->id);
+            $alunos->setNome($line->nome);
+            $alunos->setIdade($line->idade);
+            $alunos->getCurso()
+                ->setId($line->id_curso);
+            $alunos->getCurso()
+                ->setNome($line->nome_curso);
+
+            $results[] = $alunos;
         }
-
-        $aluno
-            ->setId($line->id)
-            ->setNome($line->nome)
-            ->setIdade($line->idade);
-
-        $aluno->getCurso()
-            ->setId($line->id_curso);
-
-        $aluno->getCurso()
-            ->setNome($line->nome_curso);
-
-        return [$aluno];
+        return $results;
     }
 
     public function readByCurso(string $nomeCurso): array
@@ -130,25 +129,40 @@ Class AlunosDAO
             PDO::PARAM_STR
         );
 
-        $aluno = new alunos();
+        $statement->execute();
 
-        $line = $statement->fetch(PDO::FETCH_OBJ);
+        $results = [];
 
-        if(!$line) {
-            return[];
+        while ($line = $statement->fetch(PDO::FETCH_OBJ)) {
+            
+            $alunos = (new alunos())->setId($line->id);
+            $alunos->setNome($line->nome);
+            $alunos->setIdade($line->idade);
+            $alunos->getCurso()
+                ->setId($line->id_curso);
+            $alunos->getCurso()
+                ->setNome($line->nome_curso);
+
+            $results[] = $alunos;
         }
+        return $results;
+    }
 
-        $aluno
-            ->setId($line->id)
-            ->setNome($line->nome)
-            ->setIdade($line->idade);
+    public function relatorio(): array 
+    {
+        $query = 'SELECT 
+        cursos.nome AS nome_curso,
+        COUNT(alunos.id) AS total_alunos,
+        AVG(alunos.idade) AS media_idade
+        FROM cursos
+        LEFT JOIN alunos ON cursos.id = alunos.curso_id
+        GROUP BY cursos.id, cursos.nome
+        ORDER BY total_alunos DESC;' ;
 
-        $aluno->getCurso()
-            ->setId($line->id_curso);
+        $statement = Database::getConnection()->query($query);
 
-        $aluno->getCurso()
-            ->setNome($line->nome_curso);
+        $relatorio = $statement->fetchAll(PDO::FETCH_OBJ);
 
-        return [$aluno];
+        return $relatorio;
     }
 }

@@ -72,4 +72,17 @@ class AlunosControl
             httpCode: 200
         ))->send();
     }
+
+    public function relatorio(): never
+    {
+        $alunosDAO = new AlunosDAO();
+        $relatorio = $alunosDAO->relatorio();
+
+        (new Response(
+            success: true,
+            message: 'Relatório gerado com sucesso',
+            data: $relatorio,
+            httpCode: 200
+        ))->send();
+    }
 }

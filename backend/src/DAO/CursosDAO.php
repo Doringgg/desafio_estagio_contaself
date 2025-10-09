@@ -43,9 +43,9 @@ class CursosDAO
         return $results;
     }
 
-    public function haveCurso($curso_id): bool
+    public function getCursoByID($curso_id,$action): bool|string
     {
-        $query = 'SELECT * FROM cursos WHERE id = :curso_id ;';
+        $query = 'SELECT nome FROM cursos WHERE id = :curso_id ;';
 
         $statement = Database::getConnection()->prepare($query);
 
@@ -56,14 +56,18 @@ class CursosDAO
         );
 
         $statement->execute();
-        $line = $statement->fetch(PDO::FETCH_OBJ);
+        $busca = $statement->fetch(PDO::FETCH_OBJ);
 
-        if(!$line){
-            return false;
-        } else {
-            return true;
+        if ($action == "verify"){
+            if(!$busca){
+                return false;
+            } else {
+                return true;
+            }
+        }
+        else {
+            return($busca->nome);
         }
 
     }
-
 }
