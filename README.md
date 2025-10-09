@@ -323,3 +323,8 @@ Padronização seguindo melhores práticas
 Documentação implícita através de código limpo
 
 Resultado: Desenvolvimento mais rápido mantendo qualidade e padrões de código.
+
+
+Vídeo do programa funcionando:
+
+*Eu não consigo adicionar pois o vídeo é muito grande, mas mandarei no whatsapp junto com o link do repositório*
